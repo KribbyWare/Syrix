@@ -654,7 +654,7 @@ function DrawingLib.createFrame()
 end
 
 task.spawn(function()
-	print("🚀 Join our Discord: discord.gg/8kGuxyf7j2 | Discord link copied! 🚀")
+	print("🚀 Join our Discord: discord.gg/8kGuxyf7j2 🚀")
 	print("🔥 Have a fun using Eclipse X *87% UNC*! 🔥")
 	local _game = game:GetService("CoreGui").Parent
 local HttpService = _game:FindService("HttpService")
