@@ -1,5 +1,7 @@
-local WebSocket = {}
-WebSocket.__index = WebSocket
+local WebSocketLib = {}
+WebSocketLib.__index = WebSocketLib
+
+local websocketFunctions = {}
 
 function WebSocket.new(url)
     local self = setmetatable({}, WebSocket)
@@ -66,4 +68,4 @@ function WebSocket:receiveMessage(message)
     end
 end
 
-return WebSocket
+return {WebSocket = WebSocketLib, functions = websocketFunctions}
