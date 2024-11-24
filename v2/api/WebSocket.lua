@@ -3,7 +3,7 @@ WebSocketLib.__index = WebSocketLib
 
 local websocketFunctions = {}
 
-function WebSocket.new(url)
+function WebSocketLib.new(url)
     local self = setmetatable({}, WebSocket)
     self.url = url
     self.connected = false
@@ -16,7 +16,7 @@ function WebSocket.new(url)
     return self
 end
 
-function WebSocket:connect()
+function WebSocketLib:connect()
     print("Connecting to " .. self.url)
     
     wait(1)
@@ -27,14 +27,14 @@ function WebSocket:connect()
     end
 end
 
-function WebSocket:send(message)
+function WebSocketLib:send(message)
     if not self.connected then
         error("WebSocket is not connected.")
     end
     print("Sending message: " .. message)
 end
 
-function WebSocket:close()
+function WebSocketLib:close()
     if not self.connected then
         error("WebSocket is not connected.")
     end
@@ -46,23 +46,23 @@ function WebSocket:close()
     end
 end
 
-function WebSocket:onMessage(callback)
+function WebSocketLib:onMessage(callback)
     self.callbacks.onMessage = callback
 end
 
-function WebSocket:onOpen(callback)
+function WebSocketLib:onOpen(callback)
     self.callbacks.onOpen = callback
 end
 
-function WebSocket:onClose(callback)
+function WebSocketLib:onClose(callback)
     self.callbacks.onClose = callback
 end
 
-function WebSocket:onError(callback)
+function WebSocketLib:onError(callback)
     self.callbacks.onError = callback
 end
 
-function WebSocket:receiveMessage(message)
+function WebSocketLib:receiveMessage(message)
     if self.callbacks.onMessage then
         self.callbacks.onMessage(message)
     end
