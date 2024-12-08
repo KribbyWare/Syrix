@@ -2,7 +2,7 @@ local coreGui = game:GetService("CoreGui")
 
 local camera = workspace.CurrentCamera
 local drawingUI = Instance.new("ScreenGui")
-drawingUI.Name = "2.8.0"
+drawingUI.Name = "Drawing API | Tidal v3.0.0"
 drawingUI.IgnoreGuiInset = true
 drawingUI.DisplayOrder = 0x7fffffff
 drawingUI.Parent = coreGui
@@ -654,8 +654,6 @@ function DrawingLib.createFrame()
 end
 
 task.spawn(function()
-	print("🚀 Join our Discord: discord.gg/8kGuxyf7j2 🚀")
-	print("🔥 Have a fun using Eclipse X *87% UNC*! 🔥")
 	local _game = game:GetService("CoreGui").Parent
 local HttpService = _game:FindService("HttpService")
 
